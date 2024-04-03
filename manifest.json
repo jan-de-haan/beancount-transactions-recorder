@@ -1,11 +1,11 @@
 {
-	"id": "sample-plugin",
-	"name": "Sample Plugin",
+	"id": "beancount-transactions-recorder",
+	"name": "Beancount Transaction Recorder",
 	"version": "1.0.0",
 	"minAppVersion": "0.15.0",
-	"description": "Demonstrates some of the capabilities of the Obsidian API.",
-	"author": "Obsidian",
-	"authorUrl": "https://obsidian.md",
-	"fundingUrl": "https://obsidian.md/pricing",
+	"description": "Quickly add simple transactions to a beancount ledger in Obsidian.",
+	"author": "Jan de Haan",
+	"authorUrl": "",
+	"fundingUrl": "",
 	"isDesktopOnly": false
 }
