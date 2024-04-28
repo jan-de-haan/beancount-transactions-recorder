@@ -187,11 +187,11 @@ class TransactionModal extends Modal {
 				toAccountOptions: [...this.plugin.settings.accounts].sort((a, b) => {
 					return (this.plugin.settings.toAccountLastUses[b] ?? 0) - (this.plugin.settings.toAccountLastUses[a] ?? 0)
 				}),
-				saveCallback: async t => {
-					t.fromParts.forEach(p => {
+				saveCallback: async (t: Transaction) => {
+					t.fromParts.forEach((p: TransactionPart) => {
 						this.plugin.settings.fromAccountLastUses[p.account] = (new Date()).getTime();
 					});
-					t.toParts.forEach(p => {
+					t.toParts.forEach((p: TransactionPart) => {
 						this.plugin.settings.toAccountLastUses[p.account] = (new Date()).getTime();
 					});
 					await this.plugin.saveSettings();

@@ -3,7 +3,7 @@ import { Transaction, parseTransaction, renderTransaction } from './Transaction'
 
 test("transactions are rendered correctly", () => {
     let t: Transaction = {
-        date: new Date("2024-01-01"),
+        dateIsoStr: "2024-01-01",
         description: "Test",
         otherPartyName: "Blub",
         fromParts: [
@@ -29,7 +29,7 @@ test("transactions are rendered correctly", () => {
 
 test("transactions are parsed correctly", () => {
     let t: Transaction = {
-        date: new Date("2024-01-01"),
+        dateIsoStr: "2024-01-01",
         description: "Test",
         otherPartyName: "Blub",
         fromParts: [
