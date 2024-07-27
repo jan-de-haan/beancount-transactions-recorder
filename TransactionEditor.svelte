@@ -56,12 +56,12 @@
 
 	function balanceFromSide() {
 		let totalTo = transaction.toParts
-			.map((o) => o.amount)
+			.map((o) => o.amount ?? 0)
 			.reduce((a, b) => a + b, 0);
 		let totalFrom = transaction.fromParts
-			.map((o) => o.amount)
+			.map((o) => o.amount ?? 0)
 			.reduce((a, b) => a + b, 0);
-		let missingFrom = transaction.fromParts.filter((o) => o.amount === 0);
+		let missingFrom = transaction.fromParts.filter((o) => (o.amount ?? 0) === 0);
 		if (totalTo === totalFrom) {
 			new Notice("Transaction already balanced", 1500);
 		} else if (missingFrom.length == 1) {
@@ -74,12 +74,12 @@
 
 	function balanceToSide() {
 		let totalTo = transaction.toParts
-			.map((o) => o.amount)
+			.map((o) => o.amount ?? 0)
 			.reduce((a, b) => a + b, 0);
 		let totalFrom = transaction.fromParts
-			.map((o) => o.amount)
+			.map((o) => o.amount ?? 0)
 			.reduce((a, b) => a + b, 0);
-		let missingTo = transaction.toParts.filter((o) => o.amount === 0);
+		let missingTo = transaction.toParts.filter((o) => (o.amount ?? 0) === 0);
 		if (totalTo === totalFrom) {
 			new Notice("Transaction already balanced", 1500);
 		} else if (missingTo.length == 1) {
