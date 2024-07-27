@@ -12,7 +12,7 @@ interface BeancountTransactionsRecorderSettings {
 	saveFilePattern: string;
 	currencyIcon: CurrencyIcon;
 	currencyIsoCode: string;
-	accounts: string[];
+	beancountFileForAccounts: string;
 	fromAccountLastUses: Record<string, number>;
 	toAccountLastUses: Record<string, number>;
 }
@@ -21,9 +21,28 @@ const DEFAULT_SETTINGS: BeancountTransactionsRecorderSettings = {
 	saveFilePattern: 'Finances/Books/{YYYY}/{MM}/{YYYY}-{MM}',
 	currencyIcon: 'euro',
 	currencyIsoCode: 'EUR',
-	accounts: [],
+	beancountFileForAccounts: '',
 	fromAccountLastUses: {},
 	toAccountLastUses: {},
+}
+
+async function getAccountsFromSettings(settings: BeancountTransactionsRecorderSettings, fsa: FileSystemAdapter): Promise<string[]> {
+	try {
+		let path = normalizePath(settings.beancountFileForAccounts + '.md');
+		let content = await fsa.read(path);
+		let lines = content.split('\n');
+		let accounts: string[] = [];
+		lines.forEach(line => {
+			let match = line.match(/^[0-9]{4}-[0-9]{2}-[0-9]{2} open (.*)$/);
+			if(match !== null) {
+				accounts.push(match[1]);
+			}
+		});
+		return accounts;
+	} catch {
+		return [];
+	}
+
 }
 
 export default class BeancountTransactionsRecorderPlugin extends Plugin {
@@ -176,15 +195,16 @@ class TransactionModal extends Modal {
 		this.finishedCallback = finishedCallback;
 	}
 
-	onOpen() {
+	async onOpen() {
+		let accounts = await getAccountsFromSettings(this.plugin.settings, this.app.vault.adapter as FileSystemAdapter);
 		this.transactionEditor = new TransactionEditor({
 			target: this.contentEl,
 			props: {
 				transaction: this.existingTransaction,
-				fromAccountOptions: [...this.plugin.settings.accounts].sort((a, b) => {
+				fromAccountOptions: accounts.sort((a, b) => {
 					return (this.plugin.settings.fromAccountLastUses[b] ?? 0) - (this.plugin.settings.fromAccountLastUses[a] ?? 0)
 				}),
-				toAccountOptions: [...this.plugin.settings.accounts].sort((a, b) => {
+				toAccountOptions: accounts.sort((a, b) => {
 					return (this.plugin.settings.toAccountLastUses[b] ?? 0) - (this.plugin.settings.toAccountLastUses[a] ?? 0)
 				}),
 				saveCallback: async (t: Transaction) => {
@@ -254,12 +274,12 @@ class BeancountTransactionsRecorderSettingsTab extends PluginSettingTab {
 					await this.plugin.saveSettings();
 				}));
 		new Setting(containerEl)
-			.setName('Accounts')
-			.setDesc('Accounts that are suggested by autocomplete when editing transactions (put one account per line)')
+			.setName('Beancounts file for accounts')
+			.setDesc('Path to the Beancount file that contains the "open" statements for the accounts you want to be able to use.')
 			.addTextArea(ta => ta
-				.setValue(this.plugin.settings.accounts.join('\n'))
+				.setValue(this.plugin.settings.beancountFileForAccounts)
 				.onChange(async (value: string) => {
-					this.plugin.settings.accounts = value.split('\n').filter(s => s !== '');
+					this.plugin.settings.beancountFileForAccounts = value;
 					await this.plugin.saveSettings();
 				}));
 	}
