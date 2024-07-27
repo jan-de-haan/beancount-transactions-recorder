@@ -15,10 +15,10 @@ export interface Transaction {
 export function renderTransaction(t: Transaction): string {
     let result = `${t.dateIsoStr} * "${t.otherPartyName}" "${t.description}"\n`;
     t.fromParts.forEach(part => {
-        result += `  ${part.account} -${part.amount} EUR\n`
+        result += `  ${part.account} -${part.amount.toFixed(2)} EUR\n`
     });
     t.toParts.forEach(part => {
-        result += `  ${part.account} ${part.amount} EUR\n`
+        result += `  ${part.account} ${part.amount.toFixed(2)} EUR\n`
     });
     return result;
 }
