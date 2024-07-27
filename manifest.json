@@ -1,7 +1,7 @@
 {
 	"id": "beancount-transactions-recorder",
 	"name": "Beancount Transaction Recorder",
-	"version": "0.0.4",
+	"version": "0.0.5",
 	"minAppVersion": "0.15.0",
 	"description": "Quickly add simple transactions to a beancount ledger in Obsidian.",
 	"author": "Jan de Haan",
