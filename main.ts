@@ -51,14 +51,6 @@ export default class BeancountTransactionsRecorderPlugin extends Plugin {
 	async onload() {
 		await this.loadSettings();
 
-		// This creates an icon in the left ribbon.
-		const ribbonIconEl = this.addRibbonIcon(this.settings.currencyIcon, 'Beancount Transactions Recorder', (evt: MouseEvent) => {
-			// Called when the user clicks the icon.
-			new Notice('Test!');
-		});
-		// Perform additional things with the ribbon
-		ribbonIconEl.addClass('obsidian-beancount-ribbon-item-class');
-
 		// This adds a simple command that can be triggered anywhere
 		this.addCommand({
 			id: 'record-beancount-transaction',
